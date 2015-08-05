@@ -7,7 +7,7 @@ app = Flask(__name__)
 def openTmp():
     try:
         bagelTxt = open("./tmp/aretherebagels.txt", "r")
-    except OSError:
+    except (OSError, IOError):
         return False
     bagelInfo = bagelTxt.read()
     bagelTxt.close()
@@ -23,11 +23,14 @@ def openTmp():
 
 
 def deleteTmp():
-    mtime = os.path.getmtime("./tmp/aretherebagels.txt")
+    try:
+        mtime = os.path.getmtime("./tmp/aretherebagels.txt")
+    except (IOError, OSError):
+        return
     date = datetime.datetime.fromtimestamp(mtime)
     now = datetime.datetime.now()
     elapsedtime = now - date
-    if elapsedtime.days > 0 or elapsedtime.seconds > 7200:
+    if elapsedtime.days > 0 or elapsedtime.seconds > 2:
         os.remove("./tmp/aretherebagels.txt")
 
 
