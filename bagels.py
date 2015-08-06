@@ -20,7 +20,7 @@ EMAIL_FOLDER = "Inbox"
 
 def process_mailbox(M):
     """
-    Do something with emails messages in the folder.  
+    Do something with emails messages in the folder.
     For the sake of this example, print some headers.
     """
 
@@ -48,29 +48,30 @@ def process_mailbox(M):
             print "Local Date:", \
                 local_date.strftime("%a, %d %b %Y %H:%M:%S")
 
-        text_file = open("aretherebagels.txt", "w")
+        text_file = open("./tmp/aretherebagels.txt", "w")
         text_file.write("yes")
         text_file.close()
 
 
-M = imaplib.IMAP4_SSL('imap.gmail.com')
+def run():
+    M = imaplib.IMAP4_SSL('imap.gmail.com')
 
-try:
-    rv, data = M.login(EMAIL_ACCOUNT, EMAIL_PASSWORD)
-except imaplib.IMAP4.error:
-    print "LOGIN FAILED!!! "
-    sys.exit(1)
+    try:
+        rv, data = M.login(EMAIL_ACCOUNT, EMAIL_PASSWORD)
+    except imaplib.IMAP4.error:
+        print "LOGIN FAILED!!! "
+        sys.exit(1)
 
-print rv, data
+    print rv, data
 
-rv, mailboxes = M.list()
+    rv, mailboxes = M.list()
 
-rv, data = M.select(EMAIL_FOLDER)
-if rv == 'OK':
-    print "Processing mailbox...\n"
-    process_mailbox(M)
-    M.close()
-else:
-    print "ERROR: Unable to open mailbox ", rv
+    rv, data = M.select(EMAIL_FOLDER)
+    if rv == 'OK':
+        print "Processing mailbox...\n"
+        process_mailbox(M)
+        M.close()
+    else:
+        print "ERROR: Unable to open mailbox ", rv
 
-M.logout()
+    M.logout()

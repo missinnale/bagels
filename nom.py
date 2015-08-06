@@ -1,6 +1,7 @@
 import os
 import datetime
 from flask import Flask, render_template
+import bagels
 app = Flask(__name__)
 
 
@@ -30,12 +31,13 @@ def deleteTmp():
     date = datetime.datetime.fromtimestamp(mtime)
     now = datetime.datetime.now()
     elapsedtime = now - date
-    if elapsedtime.days > 0 or elapsedtime.seconds > 2:
+    if elapsedtime.days > 0 or elapsedtime.seconds > 7200:
         os.remove("./tmp/aretherebagels.txt")
 
 
 @app.route('/')
-def bagels():
+def route():
+    bagels.run()
     aretherebagels = openTmp()
     deleteTmp()
     if aretherebagels:
